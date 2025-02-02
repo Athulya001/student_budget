@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income & Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background: #eee;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 5px;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Income & Expense Tracker</h2>
+        
+        <!-- Income Input -->
+        <input type="number" id="incomeAmount" placeholder="Enter your Income">
+        <button onclick="setIncome()">Set Income</button>
+
+        <!-- Expense Inputs -->
+        <input type="text" id="expenseName" placeholder="Expense Name">
+        <input type="number" id="expenseAmount" placeholder="Amount">
+        <button onclick="addExpense()">Add Expense</button>
+
+        <ul id="expenseList"></ul>
+
+        <!-- Total Expense & Final Balance -->
+        <p class="total">Total Expenses: ₹<span id="totalExpense">0</span></p>
+        <p class="total">Final Balance: ₹<span id="finalBalance">0</span></p>
+    </div>
+
+    <script>
+        let totalExpense = 0;
+        let totalIncome = 0;
+
+        function setIncome() {
+            let income = parseFloat(document.getElementById("incomeAmount").value);
+            if (isNaN(income) || income <= 0) {
+                alert("Please enter a valid income amount.");
+                return;
+            }
+            totalIncome = income;
+            updateFinalBalance();
+        }
+
+        function addExpense() {
+            let name = document.getElementById("expenseName").value;
+            let amount = parseFloat(document.getElementById("expenseAmount").value);
+
+            if (name === "" || isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid expense name and amount.");
+                return;
+            }
+
+            totalExpense += amount;
+            document.getElementById("totalExpense").textContent = totalExpense.toFixed(2);
+            updateFinalBalance();
+
+            let li = document.createElement("li");
+            li.innerHTML = `${name} - ₹${amount} <button onclick="removeExpense(this, ${amount})">❌</button>`;
+            document.getElementById("expenseList").appendChild(li);
+
+            document.getElementById("expenseName").value = "";
+            document.getElementById("expenseAmount").value = "";
+        }
+
+        function removeExpense(element, amount) {
+            totalExpense -= amount;
+            document.getElementById("totalExpense").textContent = totalExpense.toFixed(2);
+            updateFinalBalance();
+            element.parentElement.remove();
+        }
+
+        function updateFinalBalance() {
+            let finalAmount = totalIncome - totalExpense;
+            document.getElementById("finalBalance").textContent = finalAmount.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
